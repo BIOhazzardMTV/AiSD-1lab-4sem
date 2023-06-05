@@ -44,6 +44,71 @@ private:
 		tree = new node(k);
 		return true;
 	}
+	bool containsKey(node* tree, int k) {
+		if (!tree) {
+			return false;
+		}
+		else {
+			if (k < tree->key) return containsKey(tree->left, k);
+			else if (k > tree->key) return containsKey(tree->right, k);
+			else return true;
+		}
+	}
+	bool eraseKey(node*& tree, int k) {
+		if (!tree) {
+			return false;
+		}
+		else {
+			if (k < tree->key) return eraseKey(tree->left, k);
+			else {
+				if (k > tree->key) return eraseKey(tree->right, k);
+				else {
+					tree = deleteNode(tree);
+					return true;
+				}
+			}
+		}
+	}
+	node* deleteNode(node*& tree) {
+		if (!tree->left && !tree->right) {
+			delete tree;
+			tree = nullptr;
+			return tree;
+		}
+		if (!tree->right) {
+			node* tmp = tree;
+			tree = tree->left;
+			delete tmp;
+			return tree;
+		}
+		if (!tree->left) {
+			node* tmp = tree;
+			tree = tree->right;
+			delete tmp;
+			return tree;
+		}
+		node* tmp = tree->right;
+		if (tmp->left) {
+			while (tmp->left->left != nullptr) tmp = tmp->left;
+			if (!tmp->left->right) {
+				tree->key = tmp->left->key;
+				delete tmp->left;
+				tmp->left = nullptr;
+			}
+			else {
+				tree->key = tmp->left->key;
+				node* tmp2 = tmp->left;
+				tmp->left = tmp->left->right;
+				delete tmp2;
+			}
+		}
+		else {
+			tree->key = tmp->key;
+			tree->right = tmp->right;
+			delete tmp;
+		}
+		return tree;
+	}
 public:
 	BinarySearchTree() : root(NULL) { }
 	BinarySearchTree(const BinarySearchTree& tree) : root(copyTree(tree.root)) { }
@@ -65,4 +130,24 @@ public:
 	bool insert(int k) {
 		return insertTree(root, k);
 	}
+	bool contains(int k) {
+		return containsKey(root, k);
+	}
+	bool erase(int k) {
+		return eraseKey(root, k);
+	}
 };
+int main() {
+	BinarySearchTree tree;
+	tree.insert(1);
+	tree.insert(2);
+	tree.insert(0);
+	std::cout << "Current tree:" << std::endl;
+	tree.print();
+	int k = 1;
+	std::cout << "Is tree contains element " << k << "? - ";
+	tree.contains(k) ? std::cout << "Yes" << std::endl : std::cout << "No" << std::endl;
+	if (tree.erase(k)) std::cout << "Element " << k << " deleted" << std::endl;
+	std::cout << "Is tree contains element " << k << "? - ";
+	tree.contains(k) ? std::cout << "Yes" << std::endl : std::cout << "No" << std::endl;
+}
