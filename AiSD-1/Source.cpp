@@ -2,6 +2,8 @@
 #include<chrono>
 #include<vector>
 #include<conio.h>
+#include<limits>
+
 struct node {
 	int key;
 	node* right;
@@ -298,17 +300,128 @@ void TimeTest() {
 	std::cout << TreeTimeErase(10000) << "   " << VecTimeErase(10000) << std::endl;
 	std::cout << TreeTimeErase(100000) << "   " << VecTimeErase(100000) << std::endl;
 }
+
+void IgnoreLine() {
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+int GetInt() {
+	while (true) {
+		int x{};
+		std::cin >> x;
+		if (std::cin.fail()) {
+			std::cin.clear();
+			IgnoreLine();
+			system("cls");
+			std::cout << "Oops, that input is invalid.  Please try again.\n" << std::endl;
+		}
+		else {
+			IgnoreLine();
+			return x;
+		}
+	}
+}
+
+BinarySearchTree AddElem(BinarySearchTree tree) {
+	std::cout << "Enter value" << std::endl;
+	int value = GetInt();
+	while (tree.contains(value)) {
+		std::cout << "Oops, that input is invalid.  Please try again.\n" << std::endl;
+		value = GetInt();
+	}
+	tree.insert(value);
+	return tree;
+}
+
+BinarySearchTree DeleteElem(BinarySearchTree tree) {
+	std::cout << "Enter value" << std::endl;
+	int value = GetInt();
+	while (!tree.contains(value)) {
+		std::cout << "Oops, that input is invalid.  Please try again.\n" << std::endl;
+		value = GetInt();
+	}
+	tree.erase(value);
+	return tree;
+}
+
+void SearchElement(BinarySearchTree tree) {
+	std::cout << "Enter value" << std::endl;
+	int value = GetInt();
+	if (tree.contains(value)) std::cout << "The tree contains the given element" << std::endl;
+	else std::cout << "The tree does not contain this element" << std::endl;
+}
+
+BinarySearchTree WorkingWithTree(BinarySearchTree tree, char num) {
+	while (true) {
+		system("cls");
+		std::cout << "\tWorking with tree #" << num << std::endl;
+		std::cout << "1 - Print tree" << std::endl;
+		std::cout << "2 - Enter value to add" << std::endl;
+		std::cout << "3 - Enter value to delete" << std::endl;
+		std::cout << "4 - Delete the whole tree" << std::endl;
+		std::cout << "5 - Search element" << std::endl;
+		std::cout << "0 - Go back" << std::endl;
+		int ans2 = -1;
+		int ans = _getch();
+		system("cls");
+		switch (ans) {
+		default:
+			break;
+		case '1':
+			tree.print();
+			std::cout << "Press any key to continue..." << std::endl;
+			if (_getch()) {};
+			break;
+		case '2':
+			tree = AddElem(tree);
+			break;
+		case '3':
+			tree = DeleteElem(tree);
+			break;
+		case '4':
+			std::cout << "Are you sure you want to delete the whole tree?\n1 - yes\n2 - no\nEnter your answer: ";
+			ans2 = GetInt();
+			while (ans2 != 1 && ans2 != 2) {
+				std::cout << "Oops, that input is invalid.  Please try again.\n" << std::endl;
+				ans2 = GetInt();
+			}
+			if (ans2 == 1) tree.clear();
+			break;
+		case '5':
+			SearchElement(tree);
+			std::cout << "Press any key to continue..." << std::endl;
+			if (_getch()) {};
+			break;
+		case '0':
+			return tree;
+		}
+	}
+}
+
+
 int main() {
-	BinarySearchTree tree;
-	tree.insert(1);
-	tree.insert(2);
-	tree.insert(0);
-	std::cout << "Current tree:" << std::endl;
-	tree.print();
-	int k = 1;
-	std::cout << "Is tree contains element " << k << "? - ";
-	tree.contains(k) ? std::cout << "Yes" << std::endl : std::cout << "No" << std::endl;
-	if (tree.erase(k)) std::cout << "Element " << k << " deleted" << std::endl;
-	std::cout << "Is tree contains element " << k << "? - ";
-	tree.contains(k) ? std::cout << "Yes" << std::endl : std::cout << "No" << std::endl;
+	BinarySearchTree tree1, tree2;
+	while (true) {
+		system("cls");
+		std::cout << "1 - Working with tree #1" << std::endl;
+		std::cout << "2 - Working with tree #2" << std::endl;
+		std::cout << "0 - Exit" << std::endl;
+		int num = -1;
+		int ans = _getch();
+		system("cls");
+		switch (ans)
+		{
+		case '1':
+			tree1 = WorkingWithTree(tree1, '1');
+			break;
+		case '2':
+			tree2 = WorkingWithTree(tree2, '2');
+			break;
+		case '0':
+			std::cout << "See you soon :)" << std::endl;
+			return 0;
+		default:
+			break;
+		}
+	}
 }
