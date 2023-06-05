@@ -139,6 +139,9 @@ public:
 	bool erase(int k) {
 		return eraseKey(root, k);
 	}
+	node* getRoot() {
+		return root;
+	}
 };
 int lcg() {
 	static int x = 0;
@@ -398,6 +401,42 @@ BinarySearchTree WorkingWithTree(BinarySearchTree tree, char num) {
 	}
 }
 
+void task1(BinarySearchTree& result, node* tree) {
+	if (tree) {
+		if (tree->left) task1(result, tree->left);
+		if (tree->right) task1(result, tree->right);
+		result.insert(tree->key);
+	}
+}
+
+void task2(BinarySearchTree& result, node* tree) {
+	if (tree) {
+		if (tree->left) task2(result, tree->left);
+		if (tree->right) task2(result, tree->right);
+		if (result.contains(tree->key)) result.erase(tree->key);
+		else result.insert(tree->key);
+	}
+}
+
+void menuTask(BinarySearchTree tree1, BinarySearchTree tree2, int ans) {
+	BinarySearchTree result = tree1;
+	node* tmp = tree2.getRoot();
+	if (tmp) {
+		switch (ans) {
+		case 1:
+			task1(result, tmp);
+			break;
+		case 2:
+			task2(result, tmp);
+			break;
+		default:
+			break;
+		}
+	}
+	result.print();
+	std::cout << "Press any key to continue..." << std::endl;
+	if (_getch()) {};
+}
 
 int main() {
 	BinarySearchTree tree1, tree2;
@@ -405,6 +444,9 @@ int main() {
 		system("cls");
 		std::cout << "1 - Working with tree #1" << std::endl;
 		std::cout << "2 - Working with tree #2" << std::endl;
+		std::cout << "3 - Time test" << std::endl;
+		std::cout << "4 - Union of sets" << std::endl;
+		std::cout << "5 - Symmetric difference of sets" << std::endl;
 		std::cout << "0 - Exit" << std::endl;
 		int num = -1;
 		int ans = _getch();
@@ -416,6 +458,17 @@ int main() {
 			break;
 		case '2':
 			tree2 = WorkingWithTree(tree2, '2');
+			break;
+		case '3':
+			TimeTest();
+			std::cout << "Press any key to continue..." << std::endl;
+			if (_getch()) {};
+			break;
+		case '4':
+			menuTask(tree1, tree2, 1);
+			break;
+		case '5':
+			menuTask(tree1, tree2, 2);
 			break;
 		case '0':
 			std::cout << "See you soon :)" << std::endl;
