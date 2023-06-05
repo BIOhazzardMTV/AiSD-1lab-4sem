@@ -1,6 +1,7 @@
 #include<iostream>
+#include<chrono>
+#include<vector>
 #include<conio.h>
-#include<limits>
 struct node {
 	int key;
 	node* right;
@@ -137,6 +138,166 @@ public:
 		return eraseKey(root, k);
 	}
 };
+int lcg() {
+	static int x = 0;
+	x = (1021 * x + 24631) % 116640;
+	return x;
+}
+
+double TreeTimeFilling(int number) {
+	auto start = std::chrono::steady_clock::now();
+	for (int i = 0; i < 100; i++)
+	{
+		BinarySearchTree Tree;
+		for (int j = 0; j < number; j++)
+		{
+			Tree.insert(lcg());
+		}
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 100;
+}
+
+double TreeTimeSearch(int number) {
+	BinarySearchTree Tree;
+	for (int j = 0; j < number; j++)
+	{
+		Tree.insert(lcg());
+	}
+	auto start = std::chrono::steady_clock::now();
+
+	for (int i = 0; i < 1000; i++)
+	{
+		if (!Tree.contains(lcg())) {};
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 1000;
+}
+
+double TreeTimeInsert(int number) {
+	BinarySearchTree Tree;
+	for (int j = 0; j < number; j++)
+	{
+		Tree.insert(lcg());
+	}
+	auto start = std::chrono::steady_clock::now();
+
+	for (int i = 0; i < 1000; i++)
+	{
+		if (!Tree.insert(lcg())) {};
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 1000;
+}
+
+double TreeTimeErase(int number) {
+	BinarySearchTree Tree;
+	for (int j = 0; j < number; j++)
+	{
+		Tree.insert(lcg());
+	}
+	auto start = std::chrono::steady_clock::now();
+
+	for (int i = 0; i < 1000; i++)
+	{
+		if (!Tree.erase(lcg())) {};
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 1000;
+}
+
+double VecTimeFilling(int number) {
+	auto start = std::chrono::steady_clock::now();
+	for (int i = 0; i < 100; i++)
+	{
+		std::vector<int> V;
+		for (int j = 0; j < number; j++)
+		{
+			V.push_back(lcg());
+		}
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 100;
+}
+
+double VecTimeSearch(int number) {
+	std::vector<int> V;
+	for (int j = 0; j < number; j++)
+	{
+		V.push_back(lcg());
+	}
+
+	auto start = std::chrono::steady_clock::now();
+	for (int i = 0; i < 1000; i++)
+	{
+		V.push_back(lcg());
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 1000;
+}
+
+double VecTimeInsert(int number) {
+	std::vector<int> V;
+	for (int j = 0; j < number; j++)
+	{
+		V.push_back(lcg());
+	}
+
+	auto start = std::chrono::steady_clock::now();
+	for (int i = 0; i < 1000; i++)
+	{
+		if (find(V.begin(), V.end(), lcg()) != V.end()) {};
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 1000;
+}
+
+double VecTimeErase(int number) {
+	std::vector<int> V;
+	for (int j = 0; j < number; j++)
+	{
+		V.push_back(lcg());
+	}
+
+	auto start = std::chrono::steady_clock::now();
+	for (int i = 0; i < 1000; i++)
+	{
+		auto it = std::remove(V.begin(), V.end(), lcg());
+		V.erase(it, V.end());
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> result = end - start;
+	return result.count() / 1000;
+}
+
+void TimeTest() {
+	std::cout << "time filling of tree and vector\n";
+	std::cout << TreeTimeFilling(1000) << "   " << VecTimeFilling(1000) << std::endl;
+	std::cout << TreeTimeFilling(10000) << "   " << VecTimeFilling(10000) << std::endl;
+	std::cout << TreeTimeFilling(100000) << "   " << VecTimeFilling(100000) << std::endl;
+
+	std::cout << "time search of tree and vector\n";
+	std::cout << TreeTimeSearch(1000) << "   " << VecTimeSearch(1000) << std::endl;
+	std::cout << TreeTimeSearch(10000) << "   " << VecTimeSearch(10000) << std::endl;
+	std::cout << TreeTimeSearch(100000) << "   " << VecTimeSearch(100000) << std::endl;
+
+	std::cout << "time insert of tree and vector\n";
+	std::cout << TreeTimeInsert(1000) << "   " << VecTimeInsert(1000) << std::endl;
+	std::cout << TreeTimeInsert(10000) << "   " << VecTimeInsert(10000) << std::endl;
+	std::cout << TreeTimeInsert(100000) << "   " << VecTimeInsert(100000) << std::endl;
+
+	std::cout << "time erase of tree and vector\n";
+	std::cout << TreeTimeErase(1000) << "   " << VecTimeErase(1000) << std::endl;
+	std::cout << TreeTimeErase(10000) << "   " << VecTimeErase(10000) << std::endl;
+	std::cout << TreeTimeErase(100000) << "   " << VecTimeErase(100000) << std::endl;
+}
 int main() {
 	BinarySearchTree tree;
 	tree.insert(1);
