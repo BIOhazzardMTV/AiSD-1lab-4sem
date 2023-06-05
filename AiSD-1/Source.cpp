@@ -25,6 +25,25 @@ private:
 		}
 
 	}
+	void printTree(node* tree, int n) {
+		if (tree) {
+			printTree(tree->right, n + 1);
+			for (int i = 0; i < n; i++) {
+				std::cout << "  ";
+			}
+			std::cout << tree->key << "\n";
+			printTree(tree->left, n + 1);
+		}
+	}
+	bool insertTree(node*& tree, int k) {
+		if (tree) {
+			if (k > tree->key) return insertTree(tree->right, k);
+			else if (k < tree->key) return insertTree(tree->left, k);
+			else return false;
+		}
+		tree = new node(k);
+		return true;
+	}
 public:
 	BinarySearchTree() : root(NULL) { }
 	BinarySearchTree(const BinarySearchTree& tree) : root(copyTree(tree.root)) { }
@@ -34,5 +53,16 @@ public:
 	void clear() {
 		clearTree(root);
 		root = NULL;
+	}
+	BinarySearchTree& operator=(const BinarySearchTree& tree) {
+		clear();
+		root = copyTree(tree.root);
+		return *this;
+	}
+	void print() {
+		printTree(root, 0);
+	}
+	bool insert(int k) {
+		return insertTree(root, k);
 	}
 };
